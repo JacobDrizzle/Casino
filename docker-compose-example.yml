@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./Frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./Server
+      dockerfile: .dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=127.0.0.1
+      - DB_USER=postgres
+      - DB_PASSWORD=(Your Password Here)
+      - DB_NAME=(Your DB Name Here)
+      - DB_PORT=5432
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=(Your Password Here)
+      - POSTGRES_DB=(Your DB Name Here)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
